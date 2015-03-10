@@ -19,24 +19,33 @@ import org.javalite.activejdbc.DB;
 
 public class Main {
     public static void main(String[] args) {
-        new DB("corporation").open("com.mysql.jdbc.Driver", "jdbc:mysql://localhost/test", "root", "p@ssw0rd");
-        new DB("university").open("oracle.jdbc.driver.OracleDriver", "jdbc:oracle:thin:@localhost:1521:xe", "activejdbc", "activejdbc");
+        DB corpDb = new DB("corporation");
+        DB univDb = new DB("university");
+        try {
+            corpDb.open("org.h2.Driver", "jdbc:h2:mem:corp;DB_CLOSE_DELAY=-1", "sa", "");
+            corpDb.exec("DROP TABLE IF EXISTS employees");
+            corpDb.exec("CREATE TABLE employees (id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY, first_name VARCHAR(56), last_name VARCHAR(56))");
 
-        Employee.deleteAll();
-        Student.deleteAll();
+            univDb.open("org.h2.Driver", "jdbc:h2:mem:univ;DB_CLOSE_DELAY=-1", "sa", "");
+            univDb.exec("DROP TABLE IF EXISTS students");
+            univDb.exec("CREATE TABLE students (id INT(11) NOT NULL AUTO_INCREMENT PRIMARY KEY, first_name VARCHAR(56), last_name VARCHAR(56))");
 
-        Employee.createIt("first_name", "John", "last_name", "Doe");
-        Employee.createIt("first_name", "Jane", "last_name", "Smith");
+            Employee.deleteAll();
+            Student.deleteAll();
 
-        Student.createIt("first_name", "Mike", "last_name", "Myers");
-        Student.createIt("first_name", "Steven", "last_name", "Spielberg");
+            Employee.createIt("first_name", "John", "last_name", "Doe");
+            Employee.createIt("first_name", "Jane", "last_name", "Smith");
 
-        System.out.println("*** Employees ***");
-        Employee.findAll().dump();
-        System.out.println("*** Students ***");
-        Student.findAll().dump();
+            Student.createIt("first_name", "Mike", "last_name", "Myers");
+            Student.createIt("first_name", "Steven", "last_name", "Spielberg");
 
-        new DB("corporation").close();
-        new DB("university").close();
+            System.out.println("*** Employees ***");
+            Employee.findAll().dump();
+            System.out.println("*** Students ***");
+            Student.findAll().dump();
+        } finally {
+            corpDb.close();
+            univDb.close();
+        }
     }
 }
