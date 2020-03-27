@@ -1,8 +1,1 @@
-## ActiveJDBC: how to access multiple databases
-
-It demonstrates ability to associate different models with different databases in the same application. 
-
-### Usage:
-
-1. Execute run.sh. This will build and execute this program from start to finish.
-2. Examine run.sh and its output.
+# This repository is deprecated. All examples have moved to the [JavaLite Examples](https://github.com/javalite/javalite-examples) repo.
